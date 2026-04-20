@@ -1,24 +1,24 @@
+groovy
+Copy
+
 def call(String buildStatus = 'STARTED') {
- buildStatus = buildStatus ?: 'SUCCESS'
+  buildStatus = buildStatus ?: 'SUCCESS'
 
- def color
+  def color
+  def emoji
 
- if (buildStatus == 'SUCCESS') {
-  color = '#47ec05'
-  emoji = ':ww:'
- } else if (buildStatus == 'UNSTABLE') {
-  color = '#d5ee0d'
-  emoji = ':deadpool:'
- } else {
-  color = '#ec2805'
-  emoji = ':hulk:'
- }
+  if (buildStatus == 'SUCCESS') {
+    color = '#47ec05'
+    emoji = ':ww:'
+  } else if (buildStatus == 'UNSTABLE') {
+    color = '#d5ee0d'
+    emoji = ':deadpool:'
+  } else {
+    color = '#ec2805'
+    emoji = ':hulk:'
+  }
 
-// def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-
-// slackSend(color: color, message: msg)
-
- attachments = [
+  attachments = [
     [
       "color": color,
       "blocks": [
@@ -26,7 +26,7 @@ def call(String buildStatus = 'STARTED') {
           "type": "header",
           "text": [
             "type": "plain_text",
-            "text": "K8S Deployment - ${deploymentName} Pipeline  ${env.emoji}",
+            "text": "K8S Deployment - ${deploymentName} Pipeline ${env.emoji}",
             "emoji": true
           ]
         ],
@@ -51,9 +51,9 @@ def call(String buildStatus = 'STARTED') {
         [
           "type": "section",
           "text": [
-              "type": "mrkdwn",
-              "text": "*Failed Stage Name: * `${env.failedStage}`"
-            ],
+            "type": "mrkdwn",
+            "text": "*Failed Stage Name:* `${env.failedStage}`"
+          ],
           "accessory": [
             "type": "button",
             "text": [
@@ -78,22 +78,21 @@ def call(String buildStatus = 'STARTED') {
             ],
             [
               "type": "mrkdwn",
-              "text": "*Node Port*\n32564"
+              "text": "*Node Port:*\n32564"
             ]
-          ], 
+          ],
           "accessory": [
             "type": "image",
             "image_url": "https://raw.githubusercontent.com/sidd-harth/devsecops-k8s-demo/main/slack-emojis/k8s.png",
             "alt_text": "Kubernetes Icon"
-          ],
+          ]
         ],
-
         [
           "type": "section",
           "text": [
-              "type": "mrkdwn",
-              "text": "*Kubernetes Node: * `controlplane`"
-            ],
+            "type": "mrkdwn",
+            "text": "*Kubernetes Node:* `controlplane`"
+          ],
           "accessory": [
             "type": "button",
             "text": [
@@ -114,13 +113,13 @@ def call(String buildStatus = 'STARTED') {
           "fields": [
             [
               "type": "mrkdwn",
-              "text": "*Git Commit:*\n${GIT_COMMIT}"
+              "text": "*Git Commit:*\n${env.GIT_COMMIT ?: 'unknown'}"
             ],
             [
               "type": "mrkdwn",
-              "text": "*GIT Previous Success Commit:*\n${GIT_PREVIOUS_SUCCESSFUL_COMMIT}"
+              "text": "*GIT Previous Success Commit:*\n${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT ?: 'unknown'}"
             ]
-          ], 
+          ],
           "accessory": [
             "type": "image",
             "image_url": "https://raw.githubusercontent.com/sidd-harth/devsecops-k8s-demo/main/slack-emojis/github.png",
@@ -130,9 +129,9 @@ def call(String buildStatus = 'STARTED') {
         [
           "type": "section",
           "text": [
-              "type": "mrkdwn",
-              "text": "*Git Branch: * `${GIT_BRANCH}`"
-            ],
+            "type": "mrkdwn",
+            "text": "*Git Branch:*\n${env.GIT_BRANCH ?: 'unknown'}"
+          ],
           "accessory": [
             "type": "button",
             "text": [
@@ -149,6 +148,6 @@ def call(String buildStatus = 'STARTED') {
     ]
   ]
 
- slackSend(iconEmoji: emoji, attachments: attachments)
-
+  slackSend(iconEmoji: emoji, attachments: attachments)
 }
+

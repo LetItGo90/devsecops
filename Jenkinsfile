@@ -43,6 +43,9 @@ pipeline {
   agent any
 
   environment {
+    GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    GIT_BRANCH = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+    GIT_PREVIOUS_SUCCESSFUL_COMMIT = sh(script: 'git rev-parse HEAD~1', returnStdout: true).trim()
     deploymentName = "devsecops"
     containerName = "devsecops-container"
     serviceName = "devsecops-svc"
