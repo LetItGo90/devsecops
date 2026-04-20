@@ -56,11 +56,12 @@ pipeline {
 
   stages {
 
-     stage('Build Artifact - Maven') {
-     steps {
-        archive 'target/*.jar'
-      }
-   }
+    stage('Build Artifact - Maven') {
+        steps {
+            sh "mvn clean package -DskipTests=true"
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+  }
+}
 
  //    stage('Unit Tests - JUnit and JaCoCo') {
  //      steps {
