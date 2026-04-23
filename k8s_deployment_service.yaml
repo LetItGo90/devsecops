@@ -26,6 +26,19 @@ spec:
           name: tmp-volume
         securityContext:
           runAsNonRoot: true
-          runAsUser: 1000  # Use a higher UID
-          # Remove or comment out readOnlyRootFilesystem for now
-          # readOnlyRootFilesystem: true
+          # Remove runAsUser and readOnlyRootFilesystem
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: devsecops
+  name: devsecops-svc
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: devsecops
+  type: NodePort
